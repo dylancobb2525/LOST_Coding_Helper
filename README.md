@@ -1,1 +1,33 @@
-# LOST_Coding_Helper
+# LOST (Lord of the Strings) Coding Helper
+
+A simplified LeetCode-style app for practicing coding problems, tracking progress, and interacting with solutions. Built for **CSCE 247-002 – Software Engineering**.
+
+The goal was to design and model a structured software system using object-oriented principles and design patterns from the course.
+
+---
+
+## What you can do
+
+- Create an account and log in
+- Browse and search coding questions
+- Submit solutions
+- Comment on solutions
+- Track completed problems and progress
+- Earn achievements
+- View the leaderboard
+
+---
+
+## Design & architecture
+
+The system is modeled in UML with core classes such as **User**, **Question**, **Solution**, **Comment**, and **ProgressTracker**. A **Facade** (`ProblemApplication`) coordinates the main functionality.
+
+Concepts we focused on:
+
+- Object-oriented design
+- Separation of concerns
+- Facade design pattern
+- UML modeling
+- System architecture planning
+
+LOST is meant to be a lightweight coding-practice platform that demonstrates clear software design and organization.
