@@ -31,3 +31,12 @@ Concepts we focused on:
 - System architecture planning
 
 LOST is meant to be a lightweight coding-practice platform that demonstrates clear software design and organization.
+
+---
+
+## Data persistence (JSON)
+
+Data is consolidated into two files, aligned with the UML and **DataLoader** / **DataWriter** channels:
+
+- **`json/users.json`** – User accounts, achievement definitions, progress trackers, and leaderboard. In each user, `achievements` and `progressTracker` are stored as reference IDs (`achievementIds`, `progressTrackerId`); `favoriteProblems` remains a list of question IDs.
+- **`json/questions.json`** – All questions with their solutions, comments, and attachments embedded, plus supported languages. One load provides full question data for the app.

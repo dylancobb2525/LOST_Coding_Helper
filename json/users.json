@@ -1,56 +1,68 @@
-[
-  {
-    "userId": "b86f4811-28d4-484c-bc6e-b855a3959461",
-    "joinDate": "2026-01-15",
-    "displayName": "Alex Dev",
-    "accountId": "acc-alex-001",
-    "email": "alex@example.com",
-    "username": "alexdev",
-    "hashedPassword": "$2a$10$hashedpasswordplaceholder1",
-    "isLocked": false,
-    "failedLoginCount": 0,
-    "lastFailedLoginAt": null,
-    "achievements": [
-      {
-        "achievementId": "a1b2c3d4-e5f6-7890-abcd-ef1111111111",
-        "earnedDate": "2026-01-20T12:00:00Z"
-      }
-    ],
-    "streak": 5,
-    "lastActiveDate": "2026-02-22",
-    "favoriteProblems": ["q1a2b3c4-d5e6-7890-abcd-q11111111111", "q2a2b3c4-d5e6-7890-abcd-q22222222222"],
-    "progressTracker": {
+{
+  "achievements": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1111111111",
+      "name": "First Steps",
+      "criteria": "Complete your first coding problem",
+      "badgeCategory": "Bronze"
+    },
+    {
+      "id": "a2b2c3d4-e5f6-7890-abcd-ef2222222222",
+      "name": "Streak Master",
+      "criteria": "Maintain a 7-day solving streak",
+      "badgeCategory": "Silver"
+    }
+  ],
+  "users": [
+    {
+      "userId": "b86f4811-28d4-484c-bc6e-b855a3959461",
+      "joinDate": "2026-01-15",
+      "displayName": "Alex Dev",
+      "accountId": "acc-alex-001",
+      "email": "alex@example.com",
+      "username": "alexdev",
+      "hashedPassword": "$2a$10$hashedpasswordplaceholder1",
+      "isLocked": false,
+      "failedLoginCount": 0,
+      "lastFailedLoginAt": null,
+      "achievementIds": ["a1b2c3d4-e5f6-7890-abcd-ef1111111111"],
+      "streak": 5,
+      "lastActiveDate": "2026-02-22",
+      "favoriteProblems": ["q1a2b3c4-d5e6-7890-abcd-q11111111111", "q2a2b3c4-d5e6-7890-abcd-q22222222222"],
+      "progressTrackerId": "b86f4811-28d4-484c-bc6e-b855a3959461"
+    },
+    {
+      "userId": "fdc80997-f6ee-4fde-9b77-96084e466bdc",
+      "joinDate": "2026-02-01",
+      "displayName": "Sam Coder",
+      "accountId": "acc-sam-002",
+      "email": "sam@example.com",
+      "username": "samcoder",
+      "hashedPassword": "$2a$10$hashedpasswordplaceholder2",
+      "isLocked": false,
+      "failedLoginCount": 0,
+      "lastFailedLoginAt": null,
+      "achievementIds": ["a1b2c3d4-e5f6-7890-abcd-ef1111111111", "a2b2c3d4-e5f6-7890-abcd-ef2222222222"],
+      "streak": 12,
+      "lastActiveDate": "2026-02-22",
+      "favoriteProblems": ["q1a2b3c4-d5e6-7890-abcd-q11111111111"],
+      "progressTrackerId": "fdc80997-f6ee-4fde-9b77-96084e466bdc"
+    }
+  ],
+  "progressTrackers": [
+    {
+      "id": "b86f4811-28d4-484c-bc6e-b855a3959461",
       "completedQuestions": ["q1a2b3c4-d5e6-7890-abcd-q11111111111"],
       "userActivities": ["Completed Two Sum", "Logged in", "Viewed question q2"]
-    }
-  },
-  {
-    "userId": "fdc80997-f6ee-4fde-9b77-96084e466bdc",
-    "joinDate": "2026-02-01",
-    "displayName": "Sam Coder",
-    "accountId": "acc-sam-002",
-    "email": "sam@example.com",
-    "username": "samcoder",
-    "hashedPassword": "$2a$10$hashedpasswordplaceholder2",
-    "isLocked": false,
-    "failedLoginCount": 0,
-    "lastFailedLoginAt": null,
-    "achievements": [
-      {
-        "achievementId": "a1b2c3d4-e5f6-7890-abcd-ef1111111111",
-        "earnedDate": "2026-02-05T09:30:00Z"
-      },
-      {
-        "achievementId": "a2b2c3d4-e5f6-7890-abcd-ef2222222222",
-        "earnedDate": "2026-02-14T18:00:00Z"
-      }
-    ],
-    "streak": 12,
-    "lastActiveDate": "2026-02-22",
-    "favoriteProblems": ["q1a2b3c4-d5e6-7890-abcd-q11111111111"],
-    "progressTracker": {
+    },
+    {
+      "id": "fdc80997-f6ee-4fde-9b77-96084e466bdc",
       "completedQuestions": ["q1a2b3c4-d5e6-7890-abcd-q11111111111", "q2a2b3c4-d5e6-7890-abcd-q22222222222"],
       "userActivities": ["Completed Two Sum", "Completed Valid Parentheses", "Commented on solution"]
     }
-  }
-]
+  ],
+  "leaderboard": [
+    {"username": "samcoder", "score": 42},
+    {"username": "alexdev", "score": 28}
+  ]
+}
