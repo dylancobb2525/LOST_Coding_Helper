@@ -1,9 +1,43 @@
 package com.model;
 
-public class Contributor extends RegisteredUser {
+import com.lost_coding_helper.Question;
+import com.lost_coding_helper.User;
+import com.lost_coding_helper.enums.Topic;
+
+public class Contributor extends User {
 
     public Contributor() {
-        
+        super(null, null, null, null, null, null);
+    }
+
+    @Override
+    public boolean hasAccess(String feature) {
+        return false;
+    }
+
+    @Override
+    public boolean canSubmitSolutions() {
+        return true;
+    }
+
+    @Override
+    public boolean canTrackProgress() {
+        return true;
+    }
+
+    @Override
+    public boolean canCreateProblems() {
+        return true;
+    }
+
+    @Override
+    public boolean canViewMultipleHints() {
+        return true;
+    }
+
+    @Override
+    public boolean canFavoriteProblems() {
+        return true;
     }
 
     public void addQuestion(Question question) {
