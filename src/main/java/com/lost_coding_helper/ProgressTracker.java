@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.model.Question;
+
 public class ProgressTracker {
     private List<Question> completedProblems;
     private ArrayList<String> userActivities;

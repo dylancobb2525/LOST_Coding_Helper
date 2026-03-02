@@ -3,7 +3,7 @@ package com.model;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.lost_coding_helper.Question;
+import com.model.Question;
 
 public class QuestionList {
     private ArrayList<Question> questions;

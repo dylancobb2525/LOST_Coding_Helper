@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.lost_coding_helper.Question;
+import com.model.Question;
 
 public class DataWriter {
 

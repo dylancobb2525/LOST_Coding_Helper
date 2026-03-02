@@ -1,6 +1,6 @@
 package com.model;
 
-import com.lost_coding_helper.Question;
+import com.model.Question;
 import com.lost_coding_helper.User;
 import com.lost_coding_helper.enums.Topic;
 

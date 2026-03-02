@@ -2,6 +2,8 @@ package com.model;
 
 import java.util.ArrayList;
 import java.util.UUID;
+
+import com.lost_coding_helper.User;
 import java.io.FileReader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
