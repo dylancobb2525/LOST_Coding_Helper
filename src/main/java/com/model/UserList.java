@@ -1,5 +1,9 @@
+package com.model;
+
 import java.util.ArrayList;
 import java.util.UUID;
+
+import com.lost_coding_helper.User;
 
 public class UserList {
     private ArrayList<User> users;
