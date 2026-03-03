@@ -4,10 +4,16 @@ import com.model.Question;
 import com.lost_coding_helper.User;
 import com.lost_coding_helper.enums.Topic;
 
+import java.util.UUID;
+
 public class Contributor extends User {
 
     public Contributor() {
         super(null, null, null, null, null, null);
+    }
+
+    public Contributor(UUID userId, String displayName, String accountId, String email, String username, String hashedPassword) {
+        super(userId, displayName, accountId, email, username, hashedPassword);
     }
 
     @Override
@@ -52,8 +58,9 @@ public class Contributor extends User {
         
     }
 
-    public void addTestCases(Question question, TestCase[] testCases) {
-        
+   
+    public void addTestCases(Question question, String[] inputs, String[] expectedOutputs) {
+        // TODO: implement when Question supports test cases
     }
 
     public void assignTopics(Question question, Topic[] topics) {

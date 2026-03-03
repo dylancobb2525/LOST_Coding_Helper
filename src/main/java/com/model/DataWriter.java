@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.lost_coding_helper.User;
 import com.model.Question;
 
 public class DataWriter {
@@ -20,7 +21,8 @@ public class DataWriter {
 
     public boolean saveUsers(ArrayList<User> users) {
         try {
-            JSONObject root = readJson(USERS_FILE);
+            String path = DataConstants.resolveDataPath(USERS_FILE);
+            JSONObject root = readJson(path);
             if (root == null) {
                 root = new JSONObject();
                 root.put("achievements", new JSONArray());
@@ -33,7 +35,7 @@ public class DataWriter {
                 usersArray.add(userToJson(u));
             }
             root.put("users", usersArray);
-            return writeJson(USERS_FILE, root);
+            return writeJson(path, root);
         } catch (Exception e) {
             return false;
         }
@@ -41,7 +43,8 @@ public class DataWriter {
 
     public boolean saveProblem(ArrayList<Question> problems) {
         try {
-            JSONObject root = readJson(QUESTIONS_FILE);
+            String path = DataConstants.resolveDataPath(QUESTIONS_FILE);
+            JSONObject root = readJson(path);
             if (root == null) {
                 root = new JSONObject();
                 root.put("languages", new JSONArray());
@@ -52,15 +55,17 @@ public class DataWriter {
                 questionsArray.add(questionToJson(q));
             }
             root.put("questions", questionsArray);
-            return writeJson(QUESTIONS_FILE, root);
+            return writeJson(path, root);
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
 
     public boolean updateProblem(Question problem) {
         try {
-            JSONObject root = readJson(QUESTIONS_FILE);
+            String path = DataConstants.resolveDataPath(QUESTIONS_FILE);
+            JSONObject root = readJson(path);
             if (root == null) return false;
             JSONArray questions = (JSONArray) root.get("questions");
             if (questions == null) return false;
@@ -69,7 +74,7 @@ public class DataWriter {
                 JSONObject q = (JSONObject) questions.get(i);
                 if (targetId.equals(q.get("id"))) {
                     questions.set(i, questionToJson(problem));
-                    return writeJson(QUESTIONS_FILE, root);
+                    return writeJson(path, root);
                 }
             }
             return false;
@@ -80,7 +85,8 @@ public class DataWriter {
 
     public boolean saveFavorites(UUID userId, ArrayList<Question> favorites) {
         try {
-            JSONObject root = readJson(USERS_FILE);
+            String path = DataConstants.resolveDataPath(USERS_FILE);
+            JSONObject root = readJson(path);
             if (root == null) return false;
             JSONArray users = (JSONArray) root.get("users");
             if (users == null) return false;
@@ -93,7 +99,7 @@ public class DataWriter {
                         favIds.add(q.getId().toString());
                     }
                     u.put("favoriteProblems", favIds);
-                    return writeJson(USERS_FILE, root);
+                    return writeJson(path, root);
                 }
             }
             return false;
@@ -117,6 +123,7 @@ public class DataWriter {
             fw.flush();
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -157,7 +164,7 @@ public class DataWriter {
     @SuppressWarnings("unchecked")
     private JSONObject questionToJson(Question q) {
         JSONObject obj = new JSONObject();
-        obj.put("id", q.getId().toString());
+        obj.put("id", q.getId() != null ? q.getId().toString() : null);
         obj.put("title", q.getTitle());
         obj.put("prompt", q.getPrompt());
         obj.put("difficulty", q.getDifficulty() != null ? q.getDifficulty().toString() : null);
@@ -184,5 +191,17 @@ public class DataWriter {
         obj.put("comments", new JSONArray());
         obj.put("attachments", new JSONArray());
         return obj;
+    }
+
+    /**
+     * Run from project root (lost_coding_helper). Loads problems from DataLoader, then writes them back.
+     * Tests that save works and prints the result.
+     */
+    public static void main(String[] args) {
+        DataLoader loader = new DataLoader();
+        ArrayList<Question> problems = loader.getProblems();
+        DataWriter writer = new DataWriter();
+        boolean ok = writer.saveProblem(problems);
+        System.out.println("DataWriter test: saveProblem(problems) = " + ok);
     }
 }

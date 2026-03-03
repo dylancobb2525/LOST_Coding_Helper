@@ -1,10 +1,14 @@
 package com.model;
 
+import java.io.FileReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import com.lost_coding_helper.User;
-import java.io.FileReader;
+import com.lost_coding_helper.enums.Topic;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,7 +19,7 @@ public class DataLoader extends DataConstants {
         ArrayList<User> users = new ArrayList<>();
         
         try {
-            FileReader reader = new FileReader(USER_FILE_NAME);
+            FileReader reader = new FileReader(resolveDataPath(USER_FILE_NAME));
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             JSONArray usersJSON = (JSONArray) jsonObject.get(USERS);
@@ -38,12 +42,7 @@ public class DataLoader extends DataConstants {
                 JSONArray favoriteProblemsArray = (JSONArray) userJSON.get(USER_FAVORITE_PROBLEMS);
                 String progressTrackerId = (String) userJSON.get(USER_PROGRESS_TRACKER_ID);
                 
-                // TODO: Create User object with constructor once User class is implemented
-                // User user = new User(userId, username, email, displayName, hashedPassword, 
-                //     joinDate, accountId, isLocked, failedLoginCount != null ? failedLoginCount.intValue() : 0,
-                //     lastFailedLoginAt, achievementIdsArray, streak != null ? streak.intValue() : 0,
-                //     lastActiveDate, favoriteProblemsArray, progressTrackerId);
-                User user = new User();
+                User user = new Contributor(userId, displayName, accountId, email, username, hashedPassword);
                 users.add(user);
             }
             
@@ -59,33 +58,32 @@ public class DataLoader extends DataConstants {
         ArrayList<Question> questions = new ArrayList<>();
         
         try {
-            FileReader reader = new FileReader(QUESTION_FILE_NAME);
+            FileReader reader = new FileReader(resolveDataPath(QUESTION_FILE_NAME));
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             JSONArray questionsJSON = (JSONArray) jsonObject.get(QUESTIONS);
             
             for (int i = 0; i < questionsJSON.size(); i++) {
                 JSONObject questionJSON = (JSONObject) questionsJSON.get(i);
-                String id = (String) questionJSON.get(QUESTION_ID);
+                UUID id = parseUUID((String) questionJSON.get(QUESTION_ID));
                 String title = (String) questionJSON.get(QUESTION_TITLE);
                 String prompt = (String) questionJSON.get(QUESTION_PROMPT);
                 String difficulty = (String) questionJSON.get(QUESTION_DIFFICULTY);
-                JSONArray topics = (JSONArray) questionJSON.get(QUESTION_TOPICS);
-                JSONArray companyTags = (JSONArray) questionJSON.get(QUESTION_COMPANY_TAGS);
-                JSONArray hints = (JSONArray) questionJSON.get(QUESTION_HINTS);
-                String createdBy = (String) questionJSON.get(QUESTION_CREATED_BY);
-                String createdAt = (String) questionJSON.get(QUESTION_CREATED_AT);
+                ArrayList<Topic> topicsList = parseTopics((JSONArray) questionJSON.get(QUESTION_TOPICS));
+                ArrayList<String> companyTagsList = parseStringList((JSONArray) questionJSON.get(QUESTION_COMPANY_TAGS));
+                ArrayList<String> hintsList = parseStringList((JSONArray) questionJSON.get(QUESTION_HINTS));
+                UUID createdBy = parseUUID((String) questionJSON.get(QUESTION_CREATED_BY));
+                LocalDateTime createdAt = parseDateTime((String) questionJSON.get(QUESTION_CREATED_AT));
                 String status = (String) questionJSON.get(QUESTION_STATUS);
                 Long voteCount = (Long) questionJSON.get(QUESTION_VOTE_COUNT);
-                JSONArray solutions = (JSONArray) questionJSON.get(QUESTION_SOLUTIONS);
-                JSONArray comments = (JSONArray) questionJSON.get(QUESTION_COMMENTS);
-                JSONArray attachments = (JSONArray) questionJSON.get(QUESTION_ATTACHMENTS);
-                
-                // TODO: Create Question object with constructor once Question class is implemented
-                // Question question = new Question(id, title, prompt, difficulty, topics, 
-                //     companyTags, hints, createdBy, createdAt, status, 
-                //     voteCount != null ? voteCount.intValue() : 0, solutions, comments, attachments);
-                Question question = new Question();
+
+                Question question = new Question(id, title, prompt, difficulty, topicsList, companyTagsList,
+                        hintsList, createdBy, createdAt, status);
+                if (voteCount != null && voteCount > 0) {
+                    for (int v = 0; v < voteCount.intValue(); v++) {
+                        question.upvote(null);
+                    }
+                }
                 questions.add(question);
             }
             
@@ -95,5 +93,65 @@ public class DataLoader extends DataConstants {
         }
         
         return questions;
+    }
+
+    private static UUID parseUUID(String s) {
+        if (s == null || s.isEmpty()) return null;
+        try {
+            return UUID.fromString(s);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static LocalDateTime parseDateTime(String s) {
+        if (s == null || s.isEmpty()) return null;
+        try {
+            return LocalDateTime.parse(s.replace("Z", ""), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static ArrayList<Topic> parseTopics(JSONArray arr) {
+        ArrayList<Topic> list = new ArrayList<>();
+        if (arr == null) return list;
+        for (Object o : arr) {
+            String s = String.valueOf(o);
+            try {
+                String normalized = s.replace("/", "").replace(" ", "_").toUpperCase();
+                if (normalized.equals("ALGORITHMDATASTRUCTURE")) normalized = "ALGORITHMS_DATASTRUCTURE";
+                list.add(Topic.valueOf(normalized));
+            } catch (Exception ignored) {
+                // skip unknown topic
+            }
+        }
+        return list;
+    }
+
+    private static ArrayList<String> parseStringList(JSONArray arr) {
+        ArrayList<String> list = new ArrayList<>();
+        if (arr == null) return list;
+        for (Object o : arr) {
+            if (o != null) list.add(o.toString());
+        }
+        return list;
+    }
+
+    /**
+     * Run from project root (lost_coding_helper) so json/users.json and json/questions.json are found.
+     * Tests loading users and problems and prints counts + sample output.
+     */
+    public static void main(String[] args) {
+        DataLoader loader = new DataLoader();
+        ArrayList<User> users = loader.getUsers();
+        ArrayList<Question> problems = loader.getProblems();
+        System.out.println("DataLoader test:");
+        System.out.println("  Loaded " + users.size() + " user(s).");
+        System.out.println("  Loaded " + problems.size() + " problem(s).");
+        if (!problems.isEmpty()) {
+            Question first = problems.get(0);
+            System.out.println("  First problem title: " + first.getTitle());
+        }
     }
 }

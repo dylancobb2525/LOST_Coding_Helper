@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.lost_coding_helper.enums.ActivityType;
 import com.model.Question;
 
 public class ProgressTracker {

@@ -1,9 +1,24 @@
 package com.model;
 
+import java.io.File;
+
 public class DataConstants {
-    // File paths
+    // File paths (relative to project root lost_coding_helper, or to parent 247_project)
     public static final String USER_FILE_NAME = "json/users.json";
     public static final String QUESTION_FILE_NAME = "json/questions.json";
+
+    /**
+     * Resolves a relative path so it works whether the working directory is
+     * lost_coding_helper or the parent folder (e.g. 247_project). Tries the path
+     * as-is first, then "lost_coding_helper/" + path.
+     */
+    public static String resolveDataPath(String relativePath) {
+        File f = new File(relativePath);
+        if (f.exists()) return relativePath;
+        f = new File("lost_coding_helper/" + relativePath);
+        if (f.exists()) return f.getPath();
+        return relativePath;
+    }
     
     // JSON top-level keys
     public static final String USERS = "users";
