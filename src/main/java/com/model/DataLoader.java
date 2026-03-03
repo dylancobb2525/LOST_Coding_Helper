@@ -13,8 +13,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+/**
+ * Loads users and questions from json files.
+ */
 public class DataLoader extends DataConstants {
-    
+
+    /**
+     * Loads all users from the users json file.
+     * @return list of users (empty if something went wrong)
+     */
     public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<>();
         
@@ -53,7 +60,11 @@ public class DataLoader extends DataConstants {
         
         return users;
     }
-    
+
+    /**
+     * Loads all questions from the questions json file. This is the Load Questions json task.
+     * @return list of questions (empty if something went wrong)
+     */
     public ArrayList<Question> getProblems() {
         ArrayList<Question> questions = new ArrayList<>();
         
@@ -139,8 +150,7 @@ public class DataLoader extends DataConstants {
     }
 
     /**
-     * Run from project root (lost_coding_helper) so json/users.json and json/questions.json are found.
-     * Tests loading users and problems and prints counts + sample output.
+     * Test main. Run this to see if loading works. Prints how many users and problems were loaded.
      */
     public static void main(String[] args) {
         DataLoader loader = new DataLoader();

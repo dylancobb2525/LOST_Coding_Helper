@@ -12,21 +12,25 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.lost_coding_helper.User;
-import com.model.Question;
 
-public class DataWriter {
+/**
+ * Writes users and questions to json files. Used for save and update.
+ */
+public class DataWriter extends DataConstants {
 
-    private static final String USERS_FILE = "json/users.json";
-    private static final String QUESTIONS_FILE = "json/questions.json";
-
+    /**
+     * Saves the list of users to the users json file.
+     * @param users the list to save
+     * @return true if it worked
+     */
     public boolean saveUsers(ArrayList<User> users) {
         try {
-            String path = DataConstants.resolveDataPath(USERS_FILE);
+            String path = resolveDataPath(USER_FILE_NAME);
             JSONObject root = readJson(path);
             if (root == null) {
                 root = new JSONObject();
                 root.put("achievements", new JSONArray());
-                root.put("users", new JSONArray());
+                root.put(USERS, new JSONArray());
                 root.put("progressTrackers", new JSONArray());
                 root.put("leaderboard", new JSONArray());
             }
@@ -34,27 +38,32 @@ public class DataWriter {
             for (User u : users) {
                 usersArray.add(userToJson(u));
             }
-            root.put("users", usersArray);
+            root.put(USERS, usersArray);
             return writeJson(path, root);
         } catch (Exception e) {
             return false;
         }
     }
 
+    /**
+     * Saves the list of questions to the questions json file. Overwrites the questions in the file.
+     * @param problems the list to save
+     * @return true if it worked
+     */
     public boolean saveProblem(ArrayList<Question> problems) {
         try {
-            String path = DataConstants.resolveDataPath(QUESTIONS_FILE);
+            String path = resolveDataPath(QUESTION_FILE_NAME);
             JSONObject root = readJson(path);
             if (root == null) {
                 root = new JSONObject();
                 root.put("languages", new JSONArray());
-                root.put("questions", new JSONArray());
+                root.put(QUESTIONS, new JSONArray());
             }
             JSONArray questionsArray = new JSONArray();
             for (Question q : problems) {
                 questionsArray.add(questionToJson(q));
             }
-            root.put("questions", questionsArray);
+            root.put(QUESTIONS, questionsArray);
             return writeJson(path, root);
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,17 +71,23 @@ public class DataWriter {
         }
     }
 
+    /**
+     * Updates one question in the questions json file. Finds it by id and replaces it.
+     * @param problem the question with the new data (same id as the one to update)
+     * @return true if it found the question and wrote the file
+     */
     public boolean updateProblem(Question problem) {
         try {
-            String path = DataConstants.resolveDataPath(QUESTIONS_FILE);
+            if (problem == null || problem.getId() == null) return false;
+            String path = resolveDataPath(QUESTION_FILE_NAME);
             JSONObject root = readJson(path);
             if (root == null) return false;
-            JSONArray questions = (JSONArray) root.get("questions");
+            JSONArray questions = (JSONArray) root.get(QUESTIONS);
             if (questions == null) return false;
             String targetId = problem.getId().toString();
             for (int i = 0; i < questions.size(); i++) {
                 JSONObject q = (JSONObject) questions.get(i);
-                if (targetId.equals(q.get("id"))) {
+                if (targetId.equals(q.get(QUESTION_ID))) {
                     questions.set(i, questionToJson(problem));
                     return writeJson(path, root);
                 }
@@ -83,17 +98,47 @@ public class DataWriter {
         }
     }
 
-    public boolean saveFavorites(UUID userId, ArrayList<Question> favorites) {
+    /**
+     * Deletes one question from the questions json file. Finds it by id and removes it.
+     * @param problem the question to delete (only the id is used to find it)
+     * @return true if it found the question and wrote the file
+     */
+    public boolean deleteProblem(Question problem) {
         try {
-            String path = DataConstants.resolveDataPath(USERS_FILE);
+            if (problem == null || problem.getId() == null) return false;
+            String path = resolveDataPath(QUESTION_FILE_NAME);
             JSONObject root = readJson(path);
             if (root == null) return false;
-            JSONArray users = (JSONArray) root.get("users");
+            JSONArray questions = (JSONArray) root.get(QUESTIONS);
+            if (questions == null) return false;
+            String targetId = problem.getId().toString();
+            for (int i = 0; i < questions.size(); i++) {
+                JSONObject q = (JSONObject) questions.get(i);
+                if (targetId.equals(q.get(QUESTION_ID))) {
+                    questions.remove(i);
+                    return writeJson(path, root);
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Saves a user's favorite problems list to the users json file.
+     */
+    public boolean saveFavorites(UUID userId, ArrayList<Question> favorites) {
+        try {
+            String path = resolveDataPath(USER_FILE_NAME);
+            JSONObject root = readJson(path);
+            if (root == null) return false;
+            JSONArray users = (JSONArray) root.get(USERS);
             if (users == null) return false;
             String targetId = userId.toString();
             for (Object o : users) {
                 JSONObject u = (JSONObject) o;
-                if (targetId.equals(u.get("userId"))) {
+                if (targetId.equals(u.get(USER_ID))) {
                     JSONArray favIds = new JSONArray();
                     for (Question q : favorites) {
                         favIds.add(q.getId().toString());
@@ -164,38 +209,37 @@ public class DataWriter {
     @SuppressWarnings("unchecked")
     private JSONObject questionToJson(Question q) {
         JSONObject obj = new JSONObject();
-        obj.put("id", q.getId() != null ? q.getId().toString() : null);
-        obj.put("title", q.getTitle());
-        obj.put("prompt", q.getPrompt());
-        obj.put("difficulty", q.getDifficulty() != null ? q.getDifficulty().toString() : null);
+        obj.put(QUESTION_ID, q.getId() != null ? q.getId().toString() : null);
+        obj.put(QUESTION_TITLE, q.getTitle());
+        obj.put(QUESTION_PROMPT, q.getPrompt());
+        obj.put(QUESTION_DIFFICULTY, q.getDifficulty() != null ? q.getDifficulty().toString() : null);
         JSONArray topics = new JSONArray();
         if (q.getTopics() != null) {
             for (Object t : q.getTopics()) {
                 topics.add(t != null ? t.toString() : null);
             }
         }
-        obj.put("topics", topics);
+        obj.put(QUESTION_TOPICS, topics);
         JSONArray companyTags = new JSONArray();
         if (q.getCompanyTags() != null) {
             for (Object ct : q.getCompanyTags()) {
                 companyTags.add(ct != null ? ct.toString() : null);
             }
         }
-        obj.put("companyTags", companyTags);
-        obj.put("hints", q.getHints() != null ? q.getHints() : new JSONArray());
-        obj.put("createdBy", q.getCreatedBy() != null ? q.getCreatedBy().toString() : null);
-        obj.put("createdAt", q.getCreatedAt() != null ? q.getCreatedAt().toString() : null);
-        obj.put("status", q.getStatus() != null ? q.getStatus().toString() : null);
-        obj.put("voteCount", q.getVoteCount());
-        obj.put("solutions", new JSONArray());
-        obj.put("comments", new JSONArray());
-        obj.put("attachments", new JSONArray());
+        obj.put(QUESTION_COMPANY_TAGS, companyTags);
+        obj.put(QUESTION_HINTS, q.getHints() != null ? q.getHints() : new JSONArray());
+        obj.put(QUESTION_CREATED_BY, q.getCreatedBy() != null ? q.getCreatedBy().toString() : null);
+        obj.put(QUESTION_CREATED_AT, q.getCreatedAt() != null ? q.getCreatedAt().toString() : null);
+        obj.put(QUESTION_STATUS, q.getStatus() != null ? q.getStatus().toString() : null);
+        obj.put(QUESTION_VOTE_COUNT, q.getVoteCount());
+        obj.put(QUESTION_SOLUTIONS, new JSONArray());
+        obj.put(QUESTION_COMMENTS, new JSONArray());
+        obj.put(QUESTION_ATTACHMENTS, new JSONArray());
         return obj;
     }
 
     /**
-     * Run from project root (lost_coding_helper). Loads problems from DataLoader, then writes them back.
-     * Tests that save works and prints the result.
+     * Test main. Loads questions then saves them. Prints true if save worked.
      */
     public static void main(String[] args) {
         DataLoader loader = new DataLoader();
