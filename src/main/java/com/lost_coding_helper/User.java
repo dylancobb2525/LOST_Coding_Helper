@@ -115,6 +115,10 @@ public abstract class User {
         return progressTrackerId;
     }
 
+    public ProgressTracker getProgressTracker() {
+        return progressTracker;
+    }
+
 
 
     public abstract boolean hasAccess(String feature);

@@ -83,8 +83,7 @@ public class ProblemApplication {
         }
         Question question = questionList.getById(questionId);
         if (question != null) {
-            // TODO: Need getProgressTracker() method in User class
-            // currentUser.getProgressTracker().recordAttempt(question);
+            currentUser.getProgressTracker().recordAttempt(question);
         }
     }
 
@@ -94,8 +93,7 @@ public class ProblemApplication {
         }
         Question question = questionList.getById(questionId);
         if (question != null) {
-            // TODO: Need getProgressTracker() method in User class
-            // currentUser.getProgressTracker().markCompleted(question, timeSpentSec);
+            currentUser.getProgressTracker().markCompleted(question, timeSpentSec);
         }
     }
 
@@ -103,9 +101,7 @@ public class ProblemApplication {
         if (currentUser == null) {
             return new ArrayList<>(); // No user logged in
         }
-        // TODO: Need getProgressTracker() method in User class
-        // return currentUser.getProgressTracker().getCompletedQuestionsByDifficulty();
-        return new ArrayList<>();
+        return currentUser.getProgressTracker().getCompletedQuestionsByDifficulty();
     }
 
     public void init() {
