@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ProblemApplicationUI",
+      "request": "launch",
+      "mainClass": "com.lost_coding_helper/com.model.ProblemApplicationUI",
+      "projectName": "lost_coding_helper"
+    },
+    {
+      "type": "java",
       "name": "DataLoader",
       "request": "launch",
       "mainClass": "com.lost_coding_helper/com.model.DataLoader",

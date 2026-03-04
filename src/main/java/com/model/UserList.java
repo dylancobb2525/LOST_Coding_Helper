@@ -18,6 +18,12 @@ public class UserList {
         }
     }
 
+    public void addAll(ArrayList<User> loadedUsers) {
+        if (loadedUsers != null) {
+            users.addAll(loadedUsers);
+        }
+    }
+
     public User createAccount(String displayName, String username, String email, String password) {
         if (displayName == null || username == null || email == null || password == null) {
             return null;

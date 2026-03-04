@@ -2,13 +2,12 @@ package com.lost_coding_helper;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import com.model.Question;
-import com.model.QuestionList;
+
 import com.model.DataLoader;
 import com.model.DataWriter;
+import com.model.Question;
+import com.model.QuestionList;
 import com.model.UserList;
-import com.lost_coding_helper.User;
-import com.lost_coding_helper.Solution;
 
 public class ProblemApplication {
     private UserList userList; 
@@ -110,10 +109,14 @@ public class ProblemApplication {
         ArrayList<Question> questions = dataLoader.getProblems();
         
         // Add loaded users to userList
-        userList.getAll().addAll(users);
+        if (users != null) {
+            userList.addAll(users);
+        }
         
         // Add loaded questions to questionList
-        questionList.getAll().addAll(questions);
+        if (questions != null) {
+            questionList.getAll().addAll(questions);
+        }
     }
 
     public boolean saveAll() {
