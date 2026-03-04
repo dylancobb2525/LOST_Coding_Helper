@@ -15,7 +15,8 @@ public class ProblemApplication {
     private QuestionList questionList;
     private DataLoader dataLoader;
     private DataWriter dataWriter;
-    private Leaderboard leaderboard;
+    //private Leaderboard leaderboard;
+    private User currentUser; // Track currently logged-in user (need to update uml )
 
     // Constructor to initialize all components
     public ProblemApplication() {
@@ -32,11 +33,15 @@ public class ProblemApplication {
     }
 
     public User login(String username, String password) {
-        return userList.authenticate(username, password);
+        User user = userList.authenticate(username, password);
+        if (user != null) {
+            this.currentUser = user;
+        }
+        return user;
     }
 
     public void logOut() {
-        
+        this.currentUser = null;
     }
 
     public ArrayList<Question> getAllQuestions() {
@@ -73,17 +78,33 @@ public class ProblemApplication {
     }
 
     public void recordAttempt(UUID questionId, int timeSpentSec) {
-        
-        // Placeholder for user progress tracking
+        if (currentUser == null) {
+            return; // No user logged in
+        }
+        Question question = questionList.getById(questionId);
+        if (question != null) {
+            // TODO: Need getProgressTracker() method in User class
+            // currentUser.getProgressTracker().recordAttempt(question);
+        }
     }
 
     public void markCompleted(UUID questionId, int timeSpentSec) {
-        // 
-        // Placeholder for user progress tracking
+        if (currentUser == null) {
+            return; // No user logged in
+        }
+        Question question = questionList.getById(questionId);
+        if (question != null) {
+            // TODO: Need getProgressTracker() method in User class
+            // currentUser.getProgressTracker().markCompleted(question, timeSpentSec);
+        }
     }
 
     public ArrayList<Question> getCompletedQuestion() {
-        // This would need to get from User's ProgressTracker
+        if (currentUser == null) {
+            return new ArrayList<>(); // No user logged in
+        }
+        // TODO: Need getProgressTracker() method in User class
+        // return currentUser.getProgressTracker().getCompletedQuestionsByDifficulty();
         return new ArrayList<>();
     }
 
