@@ -17,35 +17,52 @@ public class ProgressTracker {
     }
 
     public void recordAttempt(Question problem) {
-
+        if (problem == null) {
+            return;
+        }
+        logActivity(ActivityType.ATTEMPT, "Attempted problem: " + problem.getTitle());
     }
 
     public void markCompleted(Question problem, int timeSpentSec) {
-
+        if (problem == null) {
+            return;
+        }
+        // Check if already completed to avoid duplicates
+        if (!completedProblems.contains(problem)) {
+            completedProblems.add(problem);
+        }
+        logActivity(ActivityType.COMPLETE, "Completed problem: " + problem.getTitle() + " in " + timeSpentSec + " seconds");
     }
 
     public void logActivity(ActivityType activityType, String details) {
-
+        if (activityType == null || details == null) {
+            return;
+        }
+        String activity = activityType.toString() + ": " + details;
+        userActivities.add(activity);
     } 
 
     public void updateStreak(Date activityDate) {
-
+        
+        // placeholder for strak logic in user 
     }
 
     public ArrayList<Question> getCompletedQuestionsByDifficulty() {
-        return new ArrayList<>();
+        return new ArrayList<>(completedProblems);
     }
 
     public ArrayList<Question> getCompletedQuestionsByTopic() {
-        return new ArrayList<>();
+        // returns all completed questions needs a parameter for topic
+        return new ArrayList<>(completedProblems);
     }
 
     public int getCurrentCount() {
-        return 0;
+        return completedProblems.size();
     }
 
     public void addActivity() {
-
+        
+        logActivity(ActivityType.OTHER, "User activity recorded");
     }
 
 
