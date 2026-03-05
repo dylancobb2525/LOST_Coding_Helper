@@ -145,17 +145,12 @@ public class ProblemApplication {
         return currentUser.getProgressTracker().getCompletedQuestionsByDifficulty();
     }
 
+    /**
+     * Loads users and questions from json files into the lists.
+     */
     public void init() {
-        // Load users and questions from JSON files
-        ArrayList<User> users = dataLoader.getUsers();
+        userList.load();
         ArrayList<Question> questions = dataLoader.getProblems();
-        
-        // Add loaded users to userList
-        if (users != null) {
-            userList.addAll(users);
-        }
-        
-        // Add loaded questions to questionList
         if (questions != null) {
             questionList.getAll().addAll(questions);
         }

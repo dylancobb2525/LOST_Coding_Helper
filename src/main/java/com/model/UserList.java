@@ -5,19 +5,32 @@ import java.util.UUID;
 
 import com.lost_coding_helper.User;
 
+/**
+ * Holds the list of users. Load from json in constructor or call load(). Save to json with save().
+ */
 public class UserList {
     private ArrayList<User> users;
 
     public UserList() {
         this.users = new ArrayList<>();
+        load();
+    }
+
+    /**
+     * Loads users from the users json file. Replaces the current list. This is the Load users json task.
+     */
+    public void load() {
         DataLoader dataLoader = new DataLoader();
         ArrayList<User> loadedUsers = dataLoader.getUsers();
-        
+        users.clear();
         if (loadedUsers != null) {
-            this.users.addAll(loadedUsers);
+            users.addAll(loadedUsers);
         }
     }
 
+    /**
+     * Adds a list of users (e.g. from init). Used when loading at startup.
+     */
     public void addAll(ArrayList<User> loadedUsers) {
         if (loadedUsers != null) {
             users.addAll(loadedUsers);
@@ -118,9 +131,11 @@ public class UserList {
         return new ArrayList<>(users);
     }
 
+    /**
+     * Saves the list of users to the users json file. This is the Save users json task.
+     */
     public boolean save() {
         DataWriter dataWriter = new DataWriter();
         return dataWriter.saveUsers(users);
     }
-
 }

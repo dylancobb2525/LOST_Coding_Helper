@@ -19,7 +19,7 @@ import org.json.simple.parser.JSONParser;
 public class DataLoader extends DataConstants {
 
     /**
-     * Loads all users from the users json file.
+     * Load users from the users json file. This is the Load users json task.
      * @return list of users (empty if something went wrong)
      */
     public ArrayList<User> getUsers() {
@@ -33,22 +33,13 @@ public class DataLoader extends DataConstants {
             
             for (int i = 0; i < usersJSON.size(); i++) {
                 JSONObject userJSON = (JSONObject) usersJSON.get(i);
-                UUID userId = UUID.fromString((String) userJSON.get(USER_ID));
+                UUID userId = parseUUID((String) userJSON.get(USER_ID));
+                if (userId == null) userId = UUID.randomUUID();
                 String username = (String) userJSON.get(USER_USERNAME);
                 String email = (String) userJSON.get(USER_EMAIL);
                 String displayName = (String) userJSON.get(USER_DISPLAY_NAME);
                 String hashedPassword = (String) userJSON.get(USER_HASHED_PASSWORD);
-                String joinDate = (String) userJSON.get(USER_JOIN_DATE);
                 String accountId = (String) userJSON.get(USER_ACCOUNT_ID);
-                Boolean isLocked = (Boolean) userJSON.get(USER_IS_LOCKED);
-                Long failedLoginCount = (Long) userJSON.get(USER_FAILED_LOGIN_COUNT);
-                String lastFailedLoginAt = (String) userJSON.get(USER_LAST_FAILED_LOGIN_AT);
-                JSONArray achievementIdsArray = (JSONArray) userJSON.get(USER_ACHIEVEMENT_IDS);
-                Long streak = (Long) userJSON.get(USER_STREAK);
-                String lastActiveDate = (String) userJSON.get(USER_LAST_ACTIVE_DATE);
-                JSONArray favoriteProblemsArray = (JSONArray) userJSON.get(USER_FAVORITE_PROBLEMS);
-                String progressTrackerId = (String) userJSON.get(USER_PROGRESS_TRACKER_ID);
-                
                 User user = new Contributor(userId, displayName, accountId, email, username, hashedPassword);
                 users.add(user);
             }

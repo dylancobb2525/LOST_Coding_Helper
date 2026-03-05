@@ -19,7 +19,7 @@ import com.lost_coding_helper.User;
 public class DataWriter extends DataConstants {
 
     /**
-     * Saves the list of users to the users json file.
+     * Save users to the users json file. This is the Save users json task.
      * @param users the list to save
      * @return true if it worked
      */
@@ -176,33 +176,33 @@ public class DataWriter extends DataConstants {
     @SuppressWarnings("unchecked")
     private JSONObject userToJson(User u) {
         JSONObject obj = new JSONObject();
-        obj.put("userId", u.getUserId().toString());
-        obj.put("joinDate", u.getJoinDate() != null ? u.getJoinDate().toString() : null);
-        obj.put("displayName", u.getDisplayName());
-        obj.put("accountId", u.getAccountId());
-        obj.put("email", u.getEmail());
-        obj.put("username", u.getUsername());
-        obj.put("hashedPassword", u.getHashedPassword());
-        obj.put("isLocked", u.isLocked());
-        obj.put("failedLoginCount", u.getFailedLoginCount());
-        obj.put("lastFailedLoginAt", u.getLastFailedLoginAt() != null ? u.getLastFailedLoginAt().toString() : null);
+        obj.put(USER_ID, u.getUserId() != null ? u.getUserId().toString() : null);
+        obj.put(USER_JOIN_DATE, u.getJoinDate() != null ? u.getJoinDate().toString() : null);
+        obj.put(USER_DISPLAY_NAME, u.getDisplayName());
+        obj.put(USER_ACCOUNT_ID, u.getAccountId());
+        obj.put(USER_EMAIL, u.getEmail());
+        obj.put(USER_USERNAME, u.getUsername());
+        obj.put(USER_HASHED_PASSWORD, u.getHashedPassword());
+        obj.put(USER_IS_LOCKED, u.isLocked());
+        obj.put(USER_FAILED_LOGIN_COUNT, u.getFailedLoginCount());
+        obj.put(USER_LAST_FAILED_LOGIN_AT, u.getLastFailedLoginAt() != null ? u.getLastFailedLoginAt().toString() : null);
         JSONArray achievementIds = new JSONArray();
         if (u.getAchievementIds() != null) {
             for (UUID id : u.getAchievementIds()) {
                 achievementIds.add(id.toString());
             }
         }
-        obj.put("achievementIds", achievementIds);
-        obj.put("streak", u.getStreak());
-        obj.put("lastActiveDate", u.getLastActiveDate() != null ? u.getLastActiveDate().toString() : null);
+        obj.put(USER_ACHIEVEMENT_IDS, achievementIds);
+        obj.put(USER_STREAK, u.getStreak());
+        obj.put(USER_LAST_ACTIVE_DATE, u.getLastActiveDate() != null ? u.getLastActiveDate().toString() : null);
         JSONArray favoriteIds = new JSONArray();
         if (u.getFavoriteProblems() != null) {
             for (Question q : u.getFavoriteProblems()) {
                 favoriteIds.add(q.getId().toString());
             }
         }
-        obj.put("favoriteProblems", favoriteIds);
-        obj.put("progressTrackerId", u.getProgressTrackerId() != null ? u.getProgressTrackerId().toString() : null);
+        obj.put(USER_FAVORITE_PROBLEMS, favoriteIds);
+        obj.put(USER_PROGRESS_TRACKER_ID, u.getProgressTrackerId() != null ? u.getProgressTrackerId().toString() : null);
         return obj;
     }
 
