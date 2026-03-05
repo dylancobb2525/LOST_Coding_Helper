@@ -10,6 +10,7 @@ import com.lost_coding_helper.User;
 import com.lost_coding_helper.enums.Topic;
 
 
+
 public class ProblemApplicationUI {
     private ProblemApplication problemApplication;
 
@@ -30,12 +31,15 @@ public class ProblemApplicationUI {
     public void scenario1() {
         System.out.println();
 
+        /* 
         User user = problemApplication.createAccount("Jane good", "Jane", "JaneGood249@gmail.com", "Password123");
         if (user == null) {
             System.out.println("Account creation failed for Jane good");
             return;
         } 
         System.out.println("Account created successfully for Jane good");
+        */
+        
 
         User loggedInUser = problemApplication.login("Jane", "Password123");
         if (loggedInUser == null) {
@@ -73,6 +77,7 @@ public class ProblemApplicationUI {
     public void scenario2() {
         System.out.println();
 
+        /* 
         User user = problemApplication.createAccount("Philly bob", "Pbob", "PhillyBob@gmail.com", "Password058");
 
         if (user == null) {
@@ -80,6 +85,7 @@ public class ProblemApplicationUI {
             return;
         }
         System.out.println("Account created successfully for Philly bob");
+        */
 
         User loggedInUser = problemApplication.login("Pbob", "Password058");
         if (loggedInUser == null) {
@@ -87,16 +93,8 @@ public class ProblemApplicationUI {
             return;
         }
         System.out.println("Login successful for Philly bob");
-
-        ArrayList<Question> all = problemApplication.getAllQuestions();
-        if (all == null) {
-            System.out.println("Question list null");
-            return;
-        }
-
-        Question q;
-        if (all.isEmpty()) {
-            UUID qId = UUID.randomUUID();
+    
+            UUID qdId = UUID.randomUUID();
 
             ArrayList<Topic> topics = new ArrayList<>();
             topics.add(Topic.DATABASE);
@@ -107,29 +105,26 @@ public class ProblemApplicationUI {
             ArrayList<String> hints = new ArrayList<>();
             hints.add("...");
 
-            q = new Question(qId, "SQL", "Write a SQL query that returns all users that have been created in the last 30 days.", 
+            Question qd = new Question(qdId, "SQL", "Write a SQL query that returns all users that have been created in the last 30 days.", 
                 "EASY", topics, companyTags, hints, loggedInUser.getUserId(), LocalDateTime.now(), "PUBLISHED");
 
-            problemApplication.createQuestion(q);
-            System.out.println("Question " + q.getTitle() + " created ");
-        } else {
-                q = all.get(0);
-                System.out.println("Question " + q.getTitle() + " from question list");
-            }
+            problemApplication.createQuestion(qd);
+            System.out.println("Question " + qd.getTitle() + " created ");
+     
 
 
-            Question found = problemApplication.getQuestionById(q.getId());
+            Question found = problemApplication.getQuestionById(qd.getId());
             if (found == null) {
                 System.out.println("Could not find question by id");
             } else {
                 System.out.println("Question found by id");
             }
 
-            problemApplication.recordAttempt(q.getId(), 55);
-            System.out.println("Recorded attempt for question " + q.getTitle());
+            problemApplication.recordAttempt(qd.getId(), 55);
+            System.out.println("Recorded attempt for question " + qd.getTitle());
 
-            problemApplication.markCompleted(q.getId(), 55);
-            System.out.println("Marked question " + q.getTitle() + " as completed");
+            problemApplication.markCompleted(qd.getId(), 55);
+            System.out.println("Marked question " + qd.getTitle() + " as completed");
 
             if (!problemApplication.saveAll()) {
                 System.out.println("Save failed");
