@@ -43,30 +43,72 @@ public class ProblemApplication {
         this.currentUser = null;
     }
 
-    public ArrayList<Question> getAllQuestions() {
+    /**
+     * Gets all questions.
+     */
+    public ArrayList<Question> getQuestions() {
         return questionList.getAll();
     }
-    
-    public Question getQuestionById(UUID questionId) {
+
+    /** Same as getQuestions (for UI). */
+    public ArrayList<Question> getAllQuestions() {
+        return getQuestions();
+    }
+
+    /**
+     * Gets one question by id.
+     */
+    public Question getQuestion(UUID questionId) {
         return questionList.getById(questionId);
     }
 
+    /** Same as getQuestion (for UI). */
+    public Question getQuestionById(UUID questionId) {
+        return getQuestion(questionId);
+    }
+
+    /**
+     * Searches questions by query string (title).
+     */
+    public ArrayList<Question> searchQuestions(String query) {
+        return questionList.search(query);
+    }
+
+    /**
+     * Adds a new question to the list. Call saveAll() to write to file.
+     */
     public void createQuestion(Question question) {
-        if (question != null) {
-            questionList.getAll().add(question);
+        questionList.addQuestion(question);
+    }
+
+    /**
+     * Edits a question. Finds it by id and updates with the new data, then saves to file.
+     */
+    public void editQuestion(UUID questionId, Question question) {
+        Question existing = questionList.getById(questionId);
+        if (existing == null || question == null) {
+            return;
         }
+        existing.updateQuestion(question);
+        questionList.updateQuestion(existing);
     }
 
+    /**
+     * Updates a question in the list and in the json file.
+     */
     public boolean updateQuestion(Question question) {
-        return questionList.update(question);
+        return questionList.updateQuestion(question);
     }
 
+    /**
+     * Deletes a question from the list and from the json file.
+     */
     public boolean deleteQuestion(UUID questionId) {
         Question question = questionList.getById(questionId);
-        if (question != null) {
-            return questionList.getAll().remove(question);
+        if (question == null) {
+            return false;
         }
-        return false;
+        return questionList.deleteQuestion(question);
     }
 
     public void addSolution(UUID questionId, Solution solution) {

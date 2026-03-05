@@ -3,6 +3,9 @@ package com.model;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Holds the list of questions. Add, edit, and delete go through here and can be saved to json.
+ */
 public class QuestionList {
     private final ArrayList<Question> questions;
     private DataWriter dataWriter;
@@ -15,10 +18,16 @@ public class QuestionList {
         this.dataWriter = dataWriter;
     }
 
+    /**
+     * Gets all questions in the list.
+     */
     public ArrayList<Question> getAll() {
         return questions;
     }
 
+    /**
+     * Gets one question by its id.
+     */
     public Question getById(UUID questionId) {
         if (questionId == null) {
             return null;
@@ -31,6 +40,9 @@ public class QuestionList {
         return null;
     }
 
+    /**
+     * Searches questions by title (contains the query string).
+     */
     public ArrayList<Question> search(String query) {
         ArrayList<Question> results = new ArrayList<>();
         if (query == null || query.isEmpty()) {
@@ -45,17 +57,51 @@ public class QuestionList {
         return results;
     }
 
-    public boolean update(Question question) {
-        if (question == null) {
+    /**
+     * Adds a new question to the list. Does not save to file (call save() after if needed).
+     */
+    public void addQuestion(Question question) {
+        if (question != null) {
+            questions.add(question);
+        }
+    }
+
+    /**
+     * Updates a question in the list and in the json file. Finds it by id and applies the new data.
+     * @return true if found and update worked
+     */
+    public boolean updateQuestion(Question question) {
+        if (question == null || question.getId() == null || dataWriter == null) {
             return false;
         }
         Question existing = getById(question.getId());
         if (existing == null) {
             return false;
         }
-        return existing.updateQuestion(question);
+        if (!existing.updateQuestion(question)) {
+            return false;
+        }
+        return dataWriter.updateProblem(existing);
     }
 
+    /**
+     * Deletes a question from the list and from the json file.
+     * @return true if found and delete worked
+     */
+    public boolean deleteQuestion(Question question) {
+        if (question == null || dataWriter == null) {
+            return false;
+        }
+        boolean removed = questions.remove(question);
+        if (!removed) {
+            return false;
+        }
+        return dataWriter.deleteProblem(question);
+    }
+
+    /**
+     * Saves the full list of questions to the json file.
+     */
     public boolean save() {
         if (dataWriter == null) {
             return false;
